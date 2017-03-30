@@ -443,6 +443,8 @@ class Runtime
         } elseif ($jail) {
             $cmdDelegate = sprintf('cd %s && %s', $hostPath, $cmdDelegate);
         }
+        $binPath = $this->getEnvOption('bin_path', '\$PATH');
+        $cmdDelegate = sprintf('export PATH=%s ; %s', $binPath, $cmdDelegate);
 
         $cmdRemote = str_replace('"', '\"', $cmdDelegate);
         $cmdLocal = sprintf('ssh -p %d %s %s@%s "%s"', $sshConfig['port'], $sshConfig['flags'], $user, $host, $cmdRemote);
