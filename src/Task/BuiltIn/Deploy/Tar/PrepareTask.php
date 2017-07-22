@@ -41,8 +41,10 @@ class PrepareTask extends AbstractTask
         $this->runtime->setVar('tar_local', $tarLocal);
 
         $excludes = $this->getExcludes();
+        $tarPath = $this->runtime->getEnvOption('tar_create_path', 'tar');
         $flags = $this->runtime->getEnvOption('tar_create', 'cfzp');
-        $cmdTar = sprintf('tar %s %s %s ./', $flags, $tarLocal, $excludes);
+        $from = $this->runtime->getEnvOption('from', './');
+        $cmdTar = sprintf('%s %s %s %s %s', $tarPath, $flags, $tarLocal, $excludes, $from);
 
         /** @var Process $process */
         $process = $this->runtime->runLocalCommand($cmdTar, 300);
@@ -51,7 +53,7 @@ class PrepareTask extends AbstractTask
 
     protected function getExcludes()
     {
-        $excludes = $this->runtime->getEnvOption('exclude', []);
+        $excludes = $this->runtime->getMergedOption('exclude', []);
         $excludes = array_merge(['.git'], array_filter($excludes));
 
         foreach ($excludes as &$exclude) {
