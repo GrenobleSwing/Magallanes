@@ -443,7 +443,7 @@ class Runtime
         } elseif ($jail) {
             $cmdDelegate = sprintf('cd %s && %s', $hostPath, $cmdDelegate);
         }
-        $binPath = $this->getEnvOption('bin_path', '\$PATH');
+        $binPath = $this->getEnvOption('bin_path', '$PATH');
         $cmdDelegate = sprintf('export PATH=%s ; %s', $binPath, $cmdDelegate);
 
         $cmdRemote = str_replace('"', '\"', $cmdDelegate);
