@@ -388,7 +388,7 @@ class Runtime
             case self::ON_DEPLOY:
             case self::ON_RELEASE:
             case self::POST_RELEASE:
-                return $this->runRemoteCommand($cmd, true, $timeout);
+                //return $this->runRemoteCommand($cmd, true, $timeout);
             default:
                 return $this->runLocalCommand($cmd, $timeout);
         }
