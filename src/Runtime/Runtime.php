@@ -388,7 +388,7 @@ class Runtime
             case self::ON_DEPLOY:
             case self::ON_RELEASE:
             case self::POST_RELEASE:
-                //return $this->runRemoteCommand($cmd, true, $timeout);
+                return $this->runRemoteCommand($cmd, true, $timeout);
             default:
                 return $this->runLocalCommand($cmd, $timeout);
         }
@@ -433,23 +433,23 @@ class Runtime
         $sshConfig = $this->getSSHConfig();
 
         $cmdDelegate = $cmd;
-        if ($sudo === true) {
-            $cmdDelegate = sprintf('sudo %s', $cmd);
-        }
+        //if ($sudo === true) {
+        //    $cmdDelegate = sprintf('sudo %s', $cmd);
+        //}
 
         $hostPath = rtrim($this->getEnvOption('host_path'), '/');
         if ($jail && $this->getReleaseId() !== null) {
-            $cmdDelegate = sprintf('cd %s/releases/%s && %s', $hostPath, $this->getReleaseId(), $cmdDelegate);
+            $cmdDelegate = sprintf('cd %s/releases/%s && %s && cd -', $hostPath, $this->getReleaseId(), $cmdDelegate);
         } elseif ($jail) {
-            $cmdDelegate = sprintf('cd %s && %s', $hostPath, $cmdDelegate);
+            $cmdDelegate = sprintf('cd %s && %s && cd -', $hostPath, $cmdDelegate);
         }
-        $binPath = $this->getEnvOption('bin_path', '$PATH');
-        $cmdDelegate = sprintf('export PATH=%s ; %s', $binPath, $cmdDelegate);
+        //$binPath = $this->getEnvOption('bin_path', '$PATH');
+        //$cmdDelegate = sprintf('export PATH=%s ; %s', $binPath, $cmdDelegate);
 
-        $cmdRemote = str_replace('"', '\"', $cmdDelegate);
-        $cmdLocal = sprintf('ssh -p %d %s %s@%s "%s"', $sshConfig['port'], $sshConfig['flags'], $user, $host, $cmdRemote);
+        //$cmdRemote = str_replace('"', '\"', $cmdDelegate);
+        //$cmdLocal = sprintf('ssh -p %d %s %s@%s "%s"', $sshConfig['port'], $sshConfig['flags'], $user, $host, $cmdRemote);
 
-        return $this->runLocalCommand($cmdLocal, $timeout);
+        return $this->runLocalCommand($cmdDelegate, $timeout);
     }
 
     /**
